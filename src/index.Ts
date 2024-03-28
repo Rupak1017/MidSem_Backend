@@ -14,10 +14,9 @@ async function init() {
         hello: String
     }
     type Mutation {
-        createUser(firstName: String!): Boolean
-
+        createUser(playerName: String): Boolean
     }
- 
+
     `,
     resolvers: {
       Query: {
@@ -25,10 +24,10 @@ async function init() {
       },
       Mutation:{
         createUser : async(_, 
-          {firstName}: {firstName: string}) => {
+          {playerName}: {playerName: string}) => {
             await prismaClient.user.create({
               data: {
-                firstName
+                playerName
               },
             });
             return true;
