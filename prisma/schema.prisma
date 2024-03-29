@@ -13,9 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
+model Football{
   id String @id @default(uuid())
   playerName String @map("playerName")
 
-  @@map("users")
+  @@map("footballs")
 }
+
+

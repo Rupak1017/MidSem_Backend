@@ -12,26 +12,80 @@ async function init() {
     typeDefs: `
     type Query {
         hello: String
+        footballs: [Football!]!
+        football(id: String!): Football
     }
     type Mutation {
-        createUser(playerName: String): Boolean
+        createFootball(playerName: String): Boolean
+        deleteFootball(id: String!): Boolean
+        updateFootball(id: String!, playerName: String!): Boolean
+       
+    }
+    type Football {
+      id: String!
+      playerName: String!
     }
 
     `,
     resolvers: {
       Query: {
         hello: () => `Hey there`,
+        football: async (_, { id }) => {
+          try {
+            const football = await prismaClient.football.findUnique({
+              where: { id }
+            });
+            return football;
+          } catch (error) {
+            console.error('Error fetching football:', error);
+            throw error;
+          }
+        },
+        footballs: async () => {
+          try {
+            const footballs = await prismaClient.football.findMany();
+            return footballs;
+          } catch (error) {
+            console.error('Error fetching footballs:', error);
+            throw error;
+          }
+        }
       },
       Mutation:{
-        createUser : async(_, 
+        createFootball : async(_, 
           {playerName}: {playerName: string}) => {
-            await prismaClient.user.create({
+            await prismaClient.football.create({
               data: {
                 playerName
               },
             });
             return true;
           },
+          deleteFootball: async (_, { id }) => {
+            try {
+              await prismaClient.football.delete({
+                where: { id }
+              });
+              return true;
+            } catch (error) {
+              console.error('Error deleting football:', error);
+              throw error;
+            }
+          },
+          updateFootball: async (_, { id, playerName }) => {  // Resolver for updating a football by ID
+            try {
+              await prismaClient.football.update({
+                where: { id },
+                data: {
+                  playerName
+                }
+              });
+              return true;
+            } catch (error) {
+              console.error('Error updating football:', error);
+              throw error;
+            }
+          }
       },
     },
   });
