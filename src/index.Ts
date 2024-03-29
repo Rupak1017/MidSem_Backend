@@ -110,7 +110,7 @@ async function init() {
               throw error;
             }
           },
-          updateFootball: async (_, { id, playerName }) => {  // Resolver for updating a football by ID
+          updateFootball: async (_, { id, playerName  }) => {  // Resolver for updating a football by ID
             try {
               await prismaClient.football.update({
                 where: { id },
@@ -148,7 +148,7 @@ async function init() {
   await gqlserver.start();
 
   app.get("/", (req, res) => {
-    res.json({ message: "seevering" });
+    res.json({ message: "Hello World" });
   });
   app.use("/graphql", expressMiddleware(gqlserver));
 
