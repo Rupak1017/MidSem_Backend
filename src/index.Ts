@@ -14,18 +14,26 @@ async function init() {
         hello: String
         footballs: [Football!]!
         football(id: String!): Football
+        playerStats: [PlayerStats!]!
     }
     type Mutation {
-        createFootball(playerName: String): Boolean
+        createFootball(playerName: String!, age: String!, club: String!, position: String!): Boolean
         deleteFootball(id: String!): Boolean
         updateFootball(id: String!, playerName: String!): Boolean
-       
+        createPlayerStats(playerId: String!, goals: Int!, assists: Int!, yellowCards: Int!, redCards: Int!): Boolean
     }
     type Football {
       id: String!
       playerName: String!
     }
-
+    type PlayerStats {
+      id: String!
+      playerId: String!
+      goals: Int!
+      assists: Int!
+      yellowCards: Int!
+      redCards: Int!
+    }
     `,
     resolvers: {
       Query: {
@@ -49,14 +57,36 @@ async function init() {
             console.error('Error fetching footballs:', error);
             throw error;
           }
+        },
+        playerStats: async () => {
+          try {
+            const playerStats = await prismaClient.playerStats.findMany();
+            return playerStats;
+          } catch (error) {
+            console.error('Error fetching player stats:', error);
+            throw error;
+          }
         }
       },
       Mutation:{
         createFootball : async(_, 
-          {playerName}: {playerName: string}) => {
+          {playerName,
+          age,
+          club,
+          position,
+          
+          }: {playerName: string
+          age: string
+          club: string
+          position: string
+          
+          }) => {
             await prismaClient.football.create({
               data: {
                 playerName
+                ,age
+                ,club
+                ,position
               },
             });
             return true;
@@ -85,6 +115,23 @@ async function init() {
               console.error('Error updating football:', error);
               throw error;
             }
+          },
+          createPlayerStats: async (_, { playerId, goals, assists, yellowCards, redCards }) => {
+            try {
+              await prismaClient.playerStats.create({
+                data: {
+                  playerId,
+                  goals,
+                  assists,
+                  yellowCards,
+                  redCards
+                }
+              });
+              return true;
+            } catch (error) {
+              console.error('Error creating player stats:', error);
+              throw error;
+            }
           }
       },
     },
@@ -97,7 +144,7 @@ async function init() {
   });
   app.use("/graphql", expressMiddleware(gqlserver));
 
-  app.listen(PORT, () => console.log(`server is riu ${PORT}`));
+  app.listen(PORT, () => console.log(`server is running at port ${PORT}`));
 }
 
 init();

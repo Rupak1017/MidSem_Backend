@@ -16,8 +16,23 @@ datasource db {
 model Football{
   id String @id @default(uuid())
   playerName String @map("playerName")
+  age String @map("age")
+  club String @map("club")
+  position String @map("position")
+  playerStats   PlayerStats? // Add this line to define the opposite relation field
 
   @@map("footballs")
+}
+
+model PlayerStats {
+  id         String   @id @default(uuid())
+  playerId   String   @unique
+  goals      Int?
+  assists    Int?
+  yellowCards Int?
+  redCards   Int?
+
+  player     Football? @relation(fields: [playerId], references: [id])
 }
 
 
