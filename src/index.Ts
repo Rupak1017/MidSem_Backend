@@ -25,6 +25,11 @@ async function init() {
     type Football {
       id: String!
       playerName: String!
+      age: String!
+      club: String!
+      position: String!
+      playerStats: [PlayerStats!]!
+      playerId: String!     
     }
     type PlayerStats {
       id: String!
@@ -41,7 +46,8 @@ async function init() {
         football: async (_, { id }) => {
           try {
             const football = await prismaClient.football.findUnique({
-              where: { id }
+              where: { id },
+              include: { playerStats: true }
             });
             return football;
           } catch (error) {
@@ -51,7 +57,9 @@ async function init() {
         },
         footballs: async () => {
           try {
-            const footballs = await prismaClient.football.findMany();
+            const footballs = await prismaClient.football.findMany(
+              { include: { playerStats: true } }
+            );
             return footballs;
           } catch (error) {
             console.error('Error fetching footballs:', error);

@@ -32,7 +32,7 @@ model PlayerStats {
   yellowCards Int?
   redCards   Int?
 
-  player     Football? @relation(fields: [playerId], references: [id])
+  player     Football @relation(fields: [playerId], references: [id])
 }
 
 
