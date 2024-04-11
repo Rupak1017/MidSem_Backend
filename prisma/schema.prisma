@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgres://rupakgraphql_user:eTYIsUlF4eZOGS5D91w7dj4rXv3IEozz@dpg-coc3sae3e1ms73au7m00-a.oregon-postgres.render.com/rupakgraphql"
 }
 
 model Football{
