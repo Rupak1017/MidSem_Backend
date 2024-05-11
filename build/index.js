@@ -42,7 +42,7 @@ function init() {
       club: String!
       position: String!
       playerStats: [PlayerStats!]!
-      playerId: String!     
+          
     }
     type PlayerStats {
       id: String!
